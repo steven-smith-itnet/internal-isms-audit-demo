@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Internal ISMS Audit — Pre-Certification Readiness (Demonstration)</title>
+  <meta name="description" content="An illustrative internal ISO 27001 / SOC 2 ISMS audit: audit report, control checklist, and corrective action plan. A reusable work-sample template." />
+  <style>
+    :root {
+      --bg: #0a0f1c; --bg-2: #0e1626; --bg-3: #111d33;
+      --panel: rgba(255,255,255,0.04); --panel-border: rgba(120,160,220,0.16);
+      --text: #eaf0fb; --text-soft: #a9b7cf; --text-mute: #6f7f9c;
+      --accent: #58a6ff; --accent-2: #7cc4ff; --accent-deep: #1d4ed8;
+      --green: #4ade80; --amber: #fbbf24; --red: #f87171;
+      --radius: 14px; --max: 1080px;
+      --mono: 'JetBrains Mono','SF Mono',Menlo,Consolas,monospace;
+      --sans: -apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans',Helvetica,Arial,sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--sans); background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent-2); }
+
+    /* Top bar */
+    .topbar { position: sticky; top: 0; z-index: 30; background: rgba(10,15,28,0.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--panel-border); }
+    .topbar-inner { max-width: var(--max); margin: 0 auto; height: 60px; padding: 0 24px; display: flex; align-items: center; gap: 14px; }
+    .brand { display: flex; align-items: center; gap: 11px; font-weight: 600; }
+    .brand-badge { width: 34px; height: 34px; border-radius: 8px; background: #fff; color: #16202f; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; letter-spacing: -1px; }
+    .brand small { display: block; font-size: 0.66rem; color: var(--text-mute); font-weight: 500; letter-spacing: 0.05em; }
+    .topbar-right { margin-left: auto; display: flex; gap: 8px; }
+    .btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 15px; border-radius: 9px; font-size: 0.85rem; font-weight: 600; border: 1px solid var(--panel-border); color: var(--text-soft); transition: all 0.18s ease; }
+    .btn:hover { color: #fff; background: rgba(255,255,255,0.06); }
+    .btn-primary { background: linear-gradient(135deg,var(--accent),var(--accent-deep)); color: #fff; border-color: transparent; }
+    .btn-primary:hover { color: #fff; filter: brightness(1.08); }
+
+    .wrap { max-width: var(--max); margin: 0 auto; padding: clamp(32px,6vw,64px) 24px 80px; }
+
+    /* Header */
+    .page-head { margin-bottom: 40px; }
+    .eyebrow { text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.72rem; font-weight: 600; color: var(--accent); }
+    .page-head h1 { font-size: clamp(1.6rem,4vw,2.4rem); font-weight: 700; letter-spacing: -0.02em; margin: 12px 0 10px; }
+    .page-head p.sub { color: var(--text-soft); font-size: 1.05rem; }
+    .divider { width: 52px; height: 3px; background: var(--accent); border-radius: 2px; margin-top: 18px; }
+
+    /* Stats */
+    .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 44px; }
+    .stat { padding: 22px; border-radius: var(--radius); background: var(--panel); border: 1px solid var(--panel-border); text-align: center; }
+    .stat .num { display: block; font-size: 2rem; font-weight: 700; line-height: 1; margin-bottom: 8px; }
+    .stat .lbl { font-size: 0.82rem; color: var(--text-soft); }
+
+    /* Section block */
+    .block { margin-bottom: 52px; }
+    .block-head { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
+    .block-head svg { color: var(--accent); }
+    .block-head h2 { font-size: 1.3rem; font-weight: 700; }
+
+    .card { background: var(--panel); border: 1px solid var(--panel-border); border-radius: var(--radius); }
+
+    /* Report */
+    .report { padding: 28px; }
+    .report-head { border-bottom: 1px solid var(--panel-border); padding-bottom: 20px; margin-bottom: 22px; }
+    .report-head h3 { font-size: 1.15rem; font-weight: 650; margin-bottom: 14px; }
+    .report-meta { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px 24px; font-size: 0.88rem; color: var(--text-soft); }
+    .report-meta strong { color: var(--text); font-weight: 600; }
+    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 24px; }
+    .report-grid .full { grid-column: 1 / -1; }
+    .report-block h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 8px; }
+    .report-block p { font-size: 0.9rem; color: var(--text-soft); }
+    .summary { background: rgba(88,166,255,0.05); border: 1px solid var(--panel-border); border-radius: 10px; padding: 20px; margin-bottom: 22px; }
+    .summary h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 12px; }
+    .summary p { font-size: 0.9rem; color: var(--text-soft); margin-bottom: 14px; }
+    .summary p:last-child { margin-bottom: 0; }
+    .summary strong { color: var(--text); }
+    .bars { display: grid; gap: 10px; margin: 16px 0; }
+    .bar-row { display: grid; grid-template-columns: 110px 1fr 32px; align-items: center; gap: 12px; }
+    .bar-label { font-size: 0.82rem; color: var(--text-soft); }
+    .bar-track { height: 10px; border-radius: 5px; background: rgba(255,255,255,0.06); overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 5px; }
+    .fill-green { background: var(--green); }
+    .fill-amber { background: var(--amber); }
+    .fill-red { background: var(--red); }
+    .bar-count { font-size: 0.85rem; font-weight: 600; text-align: right; }
+
+    .sev-dist h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 12px; }
+    .sev-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+    .sev-card { padding: 16px; border-radius: 10px; border: 1px solid var(--panel-border); }
+    .sev-card .n { font-size: 1.6rem; font-weight: 700; display: block; }
+    .sev-card .l { font-weight: 600; font-size: 0.9rem; display: block; margin: 2px 0 6px; }
+    .sev-card .d { font-size: 0.78rem; color: var(--text-mute); }
+    .sev-major { background: rgba(248,113,113,0.08); } .sev-major .n, .sev-major .l { color: var(--red); }
+    .sev-minor { background: rgba(251,191,36,0.08); } .sev-minor .n, .sev-minor .l { color: var(--amber); }
+    .sev-obs { background: rgba(88,166,255,0.08); } .sev-obs .n, .sev-obs .l { color: var(--accent); }
+
+    /* Filters + table */
+    .filters { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .filters .flabel { font-size: 0.82rem; color: var(--text-mute); margin-right: 4px; }
+    .fbtn { padding: 6px 13px; border-radius: 8px; font-size: 0.82rem; font-weight: 500; cursor: pointer; color: var(--text-soft); background: transparent; border: 1px solid var(--panel-border); transition: all 0.15s ease; }
+    .fbtn:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .fbtn.active { color: #fff; background: rgba(88,166,255,0.18); border-color: var(--accent); }
+
+    .table-wrap { overflow-x: auto; border: 1px solid var(--panel-border); border-radius: var(--radius); }
+    table { width: 100%; border-collapse: collapse; min-width: 720px; }
+    thead th { text-align: left; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-mute); padding: 12px 14px; border-bottom: 1px solid var(--panel-border); background: rgba(255,255,255,0.02); }
+    tbody td { padding: 13px 14px; font-size: 0.86rem; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle; }
+    .row-main { cursor: pointer; transition: background 0.15s ease; }
+    .row-main:hover { background: rgba(88,166,255,0.05); }
+    .cid { font-family: var(--mono); font-size: 0.8rem; color: var(--accent); }
+    .cname { font-weight: 600; color: var(--text); }
+    .cfw { font-family: var(--mono); font-size: 0.76rem; color: var(--text-mute); }
+    .expand-cell { text-align: center; color: var(--text-mute); width: 34px; }
+
+    .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 999px; font-size: 0.72rem; font-weight: 600; white-space: nowrap; }
+    .b-compliant { background: rgba(74,222,128,0.12); color: #86efac; border: 1px solid rgba(74,222,128,0.3); }
+    .b-partial { background: rgba(251,191,36,0.12); color: var(--amber); border: 1px solid rgba(251,191,36,0.3); }
+    .b-noncompliant { background: rgba(248,113,113,0.12); color: #fca5a5; border: 1px solid rgba(248,113,113,0.3); }
+    .sev { padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 600; }
+    .sev-b-major { background: rgba(248,113,113,0.15); color: #fca5a5; }
+    .sev-b-minor { background: rgba(251,191,36,0.15); color: var(--amber); }
+    .sev-b-obs { background: rgba(88,166,255,0.15); color: var(--accent-2); }
+    .sev-na { color: var(--text-mute); }
+
+    .detail-row td { background: rgba(0,0,0,0.2); }
+    .detail { padding: 8px 6px; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 14px; }
+    .detail-block strong { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 6px; }
+    .detail-block p { font-size: 0.85rem; color: var(--text-soft); }
+    .ev-list { list-style: none; display: grid; gap: 6px; }
+    .ev-list li { display: flex; gap: 8px; font-size: 0.82rem; color: var(--text-soft); }
+    .ev-list svg { color: var(--accent); flex-shrink: 0; margin-top: 3px; }
+    .gap-block { background: rgba(248,113,113,0.05); border: 1px solid rgba(248,113,113,0.15); border-radius: 8px; padding: 12px 14px; }
+    .gap-block strong { display: flex; align-items: center; gap: 6px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: #fca5a5; margin-bottom: 6px; }
+    .gap-block p { font-size: 0.83rem; color: var(--text-soft); }
+    .obs-block { background: rgba(88,166,255,0.06); border-color: rgba(88,166,255,0.28); }
+    .obs-block strong { color: var(--accent); }
+    .table-note { font-size: 0.8rem; color: var(--text-mute); margin-top: 12px; text-align: center; }
+
+    /* CAP */
+    .cap-intro { font-size: 0.9rem; color: var(--text-soft); margin-bottom: 18px; }
+    .cap-list { display: grid; gap: 12px; }
+    .cap-card { border: 1px solid var(--panel-border); border-radius: var(--radius); background: var(--panel); overflow: hidden; }
+    .cap-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 18px 20px; cursor: pointer; }
+    .cap-left { display: flex; gap: 14px; align-items: flex-start; }
+    .cap-id { font-family: var(--mono); font-size: 0.78rem; color: var(--accent); padding-top: 2px; }
+    .cap-title h3 { font-size: 1rem; font-weight: 650; margin-bottom: 7px; }
+    .cap-tags { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .cap-ref { font-size: 0.74rem; color: var(--text-mute); font-family: var(--mono); }
+    .cap-right { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+    .cap-meta { display: grid; gap: 4px; text-align: right; }
+    .cap-meta span { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; font-size: 0.78rem; color: var(--text-soft); }
+    .cap-chev { color: var(--text-mute); transition: transform 0.2s ease; }
+    .cap-card.open .cap-chev { transform: rotate(180deg); }
+    .cap-body { padding: 0 20px 20px; display: none; }
+    .cap-card.open .cap-body { display: block; }
+    .cap-body strong { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin: 14px 0 6px; }
+    .cap-body p { font-size: 0.86rem; color: var(--text-soft); }
+    .cap-body ol { margin: 6px 0 0 18px; }
+    .cap-body li { font-size: 0.84rem; color: var(--text-soft); margin-bottom: 5px; }
+
+    /* Outcomes */
+    .outcomes { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    .outcome { padding: 22px; border-radius: var(--radius); background: var(--panel); border: 1px solid var(--panel-border); }
+    .outcome h3 { font-size: 0.98rem; font-weight: 650; margin-bottom: 8px; color: var(--text); }
+    .outcome p { font-size: 0.85rem; color: var(--text-soft); }
+
+    /* Footer */
+    .foot { margin-top: 40px; padding: 20px; border: 1px dashed var(--panel-border); border-radius: 10px; font-size: 0.82rem; color: var(--text-mute); }
+    .foot a { display: inline-flex; align-items: center; gap: 3px; }
+
+    @media (max-width: 820px) {
+      .stats { grid-template-columns: repeat(2,1fr); }
+      .report-grid, .detail-grid { grid-template-columns: 1fr; }
+      .sev-cards, .outcomes { grid-template-columns: 1fr; }
+      .report-meta { grid-template-columns: 1fr; }
+      .cap-right { flex-direction: column; align-items: flex-end; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-badge">SS</span>
+        <span>Steven Smith<small>Internal ISMS Audit · Demonstration</small></span>
+      </div>
+      <div class="topbar-right">
+        <a class="btn" id="repo-link" href="#" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="page-head">
+      <span class="eyebrow">Work-sample template</span>
+      <h1>Internal Audit Project Demonstration</h1>
+      <p class="sub">Pre-Certification Readiness Assessment — ISO/IEC 27001:2022 &amp; SOC 2 Type II</p>
+      <div class="divider"></div>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="block">
+      <div class="block-head">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <h2>Audit Report</h2>
+      </div>
+      <div class="card report" id="report"></div>
+    </div>
+
+    <div class="block">
+      <div class="block-head">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <h2>Internal Audit Checklist</h2>
+      </div>
+      <div class="filters" id="filters"></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Control</th><th>Framework</th><th>Category</th><th>Status</th><th>Severity</th><th></th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <p class="table-note">Click any row to expand auditor findings, evidence reviewed, and identified gaps.</p>
+    </div>
+
+    <div class="block">
+      <div class="block-head">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        <h2>Corrective Action Plan (CAP)</h2>
+      </div>
+      <p class="cap-intro">Each corrective action addresses a specific audit finding with defined milestones, ownership, and deadlines. Click to expand milestone details.</p>
+      <div class="cap-list" id="cap-list"></div>
+    </div>
+
+    <div class="block">
+      <div class="block-head">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        <h2>Key Learning Outcomes</h2>
+      </div>
+      <div class="outcomes" id="outcomes"></div>
+    </div>
+
+    <div class="foot" id="foot"></div>
+  </main>
+
+  <script>
+    const REPO_URL = "https://github.com/SmittyStuff/internal-isms-audit-demo";
+    document.getElementById('repo-link').href = REPO_URL;
+
+    const auditInfo = {
+      title: "Internal ISMS Audit — Pre-Certification Readiness Assessment",
+      organization: "Illustrative Client — Cloud SaaS Provider",
+      standard: "ISO/IEC 27001:2022 · SOC 2 Type II",
+      auditPeriod: "March 2026 · 5 business days (fieldwork)",
+      auditor: "Internal Audit Function",
+      scope: "Information Security Management System (ISMS) covering cloud infrastructure, application security, access management, incident response, and vendor management for the SaaS platform and its supporting operations.",
+      objective: "Assess the design and operating effectiveness of 15 selected ISMS controls ahead of the planned external certification audit in Q3 2026. Identify non-conformities, evaluate evidence quality, and produce a Corrective Action Plan to achieve audit readiness.",
+      methodology: "Controls were selected using a risk-based sampling approach, prioritizing controls mapped to high-risk areas identified in the most recent risk assessment. For each control, the auditor reviewed documented policies, interviewed control owners, examined system configurations, and validated evidence artifacts. Findings were classified using a three-tier severity model (Major non-conformity, Minor non-conformity, Observation).",
+    };
+
+    const auditControls = [
+      { id:"AUD-01", control:"Information Security Policy", framework:"ISO 27001 A.5.1 / SOC 2 CC1.1", category:"Governance", status:"Compliant", evidence:["Information Security Policy v3.2 (approved Feb 2026)","Board meeting minutes showing annual policy review","Policy distribution acknowledgment records (94% completion)"], finding:"Information security policy is documented, approved by the CISO, reviewed annually, and distributed to all employees via the intranet. Policy acknowledgment tracking is in place.", gap:null, severity:null },
+      { id:"AUD-02", control:"Risk Assessment Process", framework:"ISO 27001 Cl. 6.1.2 / SOC 2 CC3.2", category:"Risk Management", status:"Compliant", evidence:["Risk Assessment Report (January 2026)","Risk register with 12 identified risks and scoring","Risk treatment plan with owner assignments"], finding:"Annual risk assessment was conducted in January 2026 using a 5×5 likelihood-impact matrix. Risk register is maintained with clear ownership, scoring, and treatment plans. Risk appetite statement approved by executive leadership.", gap:null, severity:null },
+      { id:"AUD-03", control:"Access Control Policy & MFA", framework:"ISO 27001 A.8.5 / SOC 2 CC6.1", category:"Access Control", status:"Partially Implemented", evidence:["IAM credential report showing MFA status","Access control policy document","SSO configuration screenshots"], finding:"MFA is enforced for production AWS access and the admin console. However, 3 of 22 employees (14%) are using SMS-based MFA instead of the mandated TOTP or hardware keys. The access control policy does not explicitly prohibit SMS-based MFA.", gap:"SMS-based MFA still permitted for 3 users despite being vulnerable to SIM-swapping attacks. Policy does not explicitly require phishing-resistant MFA methods.", severity:"Minor" },
+      { id:"AUD-04", control:"User Access Reviews", framework:"ISO 27001 A.5.18 / SOC 2 CC6.2", category:"Access Control", status:"Non-Compliant", evidence:["Partial access review spreadsheet from Q4 2025","No Q1 2026 review documentation found"], finding:"Quarterly access reviews are required per policy but the Q1 2026 review was not conducted. The Q4 2025 review was incomplete — only 60% of systems were covered, and no evidence of manager approval for continued access was documented.", gap:"Q1 2026 quarterly access review was not performed. Q4 2025 review was incomplete (60% coverage) with no manager sign-off. Risk of orphaned accounts and excessive privileges going undetected.", severity:"Major" },
+      { id:"AUD-05", control:"Encryption at Rest", framework:"ISO 27001 A.8.24 / SOC 2 CC6.7", category:"Data Protection", status:"Compliant", evidence:["AWS Config rule showing all S3 buckets encrypted","RDS encryption status screenshots","KMS key policy and rotation configuration"], finding:"All S3 buckets enforce SSE-S3 (AES-256) or SSE-KMS encryption. RDS instances use encrypted storage with customer-managed KMS keys. Key rotation is enabled (annual). AWS Config rule continuously monitors encryption status with no non-compliant resources detected.", gap:null, severity:null },
+      { id:"AUD-06", control:"Encryption in Transit", framework:"ISO 27001 A.8.24 / SOC 2 CC6.7", category:"Data Protection", status:"Compliant", evidence:["ALB listener configuration (HTTPS only)","S3 bucket policies requiring SecureTransport","CloudFront TLS 1.2 minimum configuration","SSL Labs scan results (A+ rating)"], finding:"All external-facing endpoints enforce TLS 1.2+. S3 bucket policies deny non-HTTPS requests. Application Load Balancer configured with HTTPS-only listeners. CloudFront distributions use TLSv1.2_2021 security policy. External SSL Labs scan confirms A+ rating.", gap:null, severity:null },
+      { id:"AUD-07", control:"Security Logging & Monitoring", framework:"ISO 27001 A.8.15 / SOC 2 CC7.1", category:"Monitoring", status:"Compliant", evidence:["CloudTrail trail configuration (all regions)","CloudWatch alarm definitions","Log retention policy (365 days)","Sample alert notifications"], finding:"CloudTrail is enabled across all regions with log file validation. CloudWatch alarms are configured for 8 security-relevant event types (root login, IAM changes, security group modifications, etc.). Logs are retained for 365 days with Glacier archival. Alert notifications are delivered via SNS to the security team within 5 minutes.", gap:"Logging and alerting are operating effectively. However, security events from CloudTrail and CloudWatch are not yet centralized into a SIEM, so cross-source correlation is manual. Forwarding logs to a SIEM or managed detection service would strengthen detection of multi-stage attacks. Recorded as an improvement opportunity, not a non-conformity.", severity:"Observation" },
+      { id:"AUD-08", control:"Incident Response Plan", framework:"ISO 27001 A.5.24 / SOC 2 CC7.3", category:"Incident Response", status:"Partially Implemented", evidence:["Incident Response Plan v2.0","CIRT role assignments","No tabletop exercise documentation found"], finding:"An incident response plan exists with defined severity levels, roles, and escalation procedures. CIRT members are assigned. However, no tabletop exercise or plan test has been conducted in the past 12 months, which is required by policy (annual testing) and ISO 27035.", gap:"No IR plan testing (tabletop exercise) conducted in the past 12 months. Plan effectiveness has not been validated. Team readiness is unverified.", severity:"Minor" },
+      { id:"AUD-09", control:"Backup & Recovery", framework:"ISO 27001 A.8.13 / SOC 2 CC7.5", category:"Business Continuity", status:"Partially Implemented", evidence:["RDS automated backup configuration (30-day retention)","S3 versioning enabled","No backup restoration test records found"], finding:"Automated backups are configured for RDS (30-day retention) and S3 versioning is enabled for data buckets. Cross-region replication is in place for the primary database. However, no backup restoration tests have been performed or documented in the last 6 months.", gap:"Backup restoration testing has not been performed in 6+ months. Recovery Time Objective (RTO) and Recovery Point Objective (RPO) have never been validated against actual restoration performance. Risk of undetected backup failures.", severity:"Minor" },
+      { id:"AUD-10", control:"Vendor Risk Management", framework:"ISO 27001 A.5.19 / SOC 2 CC9.2", category:"Vendor Management", status:"Non-Compliant", evidence:["Vendor inventory spreadsheet (last updated August 2025)","2 of 8 critical vendors have current security assessments"], finding:"A vendor inventory exists but was last updated 7 months ago and does not include 3 new SaaS tools adopted in Q4 2025. Only 2 of 8 critical-tier vendors have current security assessments (within 12 months). No standardized vendor assessment questionnaire is in use.", gap:"Vendor inventory is 7 months stale and missing 3 recently adopted tools. 75% of critical vendors lack current security assessments. No standardized questionnaire or risk-tiering methodology documented.", severity:"Major" },
+      { id:"AUD-11", control:"Security Awareness Training", framework:"ISO 27001 A.6.3 / SOC 2 CC1.4", category:"People", status:"Partially Implemented", evidence:["LMS training completion report (78% completion)","Training content screenshots","No phishing simulation records"], finding:"Security awareness training is delivered annually via LMS. Current completion rate is 78% (17 of 22 employees). Training content covers password security, phishing awareness, and data handling. However, 5 employees are overdue, and no phishing simulations have been conducted to validate training effectiveness.", gap:"22% of employees (5 of 22) have not completed required security awareness training. No phishing simulations conducted to measure behavioral change. Training effectiveness is unverified.", severity:"Minor" },
+      { id:"AUD-12", control:"Change Management Process", framework:"ISO 27001 A.8.32 / SOC 2 CC8.1", category:"Change Management", status:"Compliant", evidence:["Change management policy","Git PR history with approvals","CloudFormation deployment logs","Change Advisory Board (CAB) meeting minutes"], finding:"All infrastructure changes are managed through CloudFormation templates stored in Git with branch protection requiring peer review. Application changes follow a PR-based workflow with automated CI/CD pipeline. CAB meets weekly to review significant changes. Emergency change procedures are documented.", gap:null, severity:null },
+      { id:"AUD-13", control:"Network Security Controls", framework:"ISO 27001 A.8.20 / SOC 2 CC6.6", category:"Infrastructure", status:"Compliant", evidence:["VPC architecture diagram","Security group rule exports","NAT Gateway configuration","GuardDuty enablement status"], finding:"VPC architecture implements proper network segmentation with public/private subnets. Security groups follow least-privilege — no 0.0.0.0/0 ingress rules on production resources. GuardDuty enabled across all regions for threat detection. NAT Gateway provides outbound-only access for private subnets.", gap:null, severity:null },
+      { id:"AUD-14", control:"Asset Management", framework:"ISO 27001 A.5.9 / SOC 2 CC6.1", category:"Governance", status:"Partially Implemented", evidence:["Asset inventory spreadsheet","AWS Config resource inventory","No formal classification scheme document"], finding:"An asset inventory exists covering hardware and cloud resources. AWS Config provides automated discovery of cloud assets. However, there is no formal data classification scheme documented, and asset ownership is not consistently assigned — 30% of entries lack a designated owner.", gap:"No formal data classification scheme (e.g., Public, Internal, Confidential, Restricted) is documented. 30% of asset inventory entries lack a designated owner. Classification is needed to apply appropriate controls based on data sensitivity.", severity:"Minor" },
+      { id:"AUD-15", control:"Business Continuity Planning", framework:"ISO 27001 A.5.30 / SOC 2 CC7.5", category:"Business Continuity", status:"Non-Compliant", evidence:["Draft BCP document (incomplete, never approved)","No BIA documentation found"], finding:"A draft business continuity plan exists but has never been completed, approved, or tested. No Business Impact Analysis (BIA) has been performed to identify critical business functions and acceptable downtime thresholds. RTO and RPO targets are not formally defined.", gap:"No approved Business Continuity Plan. No Business Impact Analysis conducted. RTO/RPO targets undefined. The organization cannot demonstrate preparedness for a significant disruption event.", severity:"Major" },
+    ];
+
+    const correctiveActions = [
+      { id:"CAP-01", finding:"AUD-04", title:"Implement Quarterly Access Reviews", severity:"Major", action:"Establish a formal quarterly access review process with automated tooling. Deploy an access certification platform (or build a structured spreadsheet workflow) that pulls current access lists from the identity provider, cloud IAM, the CRM, and other critical systems. Require manager attestation for each user's continued access. Define escalation procedures for overdue reviews.", owner:"IT Manager", deadline:"April 30, 2026", milestones:["Select access review tooling (Apr 7)","Define review process and templates (Apr 14)","Conduct Q1 2026 retroactive review (Apr 21)","Establish calendar reminders and escalation procedures (Apr 28)"] },
+      { id:"CAP-02", finding:"AUD-10", title:"Rebuild Vendor Risk Management Program", severity:"Major", action:"Update the vendor inventory to include all current vendors, implement a risk-tiering methodology, create a standardized security assessment questionnaire, and complete assessments for all critical-tier vendors. Establish a 12-month reassessment cadence.", owner:"Compliance Officer", deadline:"May 31, 2026", milestones:["Complete vendor inventory refresh (Apr 14)","Define vendor risk-tiering criteria (Apr 21)","Develop standardized vendor questionnaire (Apr 30)","Complete critical vendor assessments (May 21)","Establish reassessment calendar (May 31)"] },
+      { id:"CAP-03", finding:"AUD-15", title:"Develop Business Continuity Plan & BIA", severity:"Major", action:"Conduct a Business Impact Analysis to identify critical business functions, dependencies, and acceptable downtime. Define RTO/RPO targets for each critical system. Complete and approve a Business Continuity Plan. Schedule an annual tabletop exercise to test the plan.", owner:"VP of Engineering", deadline:"June 15, 2026", milestones:["Conduct BIA workshops with department heads (Apr 21)","Define RTO/RPO targets (May 5)","Draft BCP document (May 19)","Executive review and approval (Jun 2)","Schedule first tabletop test (Jun 15)"] },
+      { id:"CAP-04", finding:"AUD-03", title:"Eliminate SMS-Based MFA", severity:"Minor", action:"Migrate remaining 3 users from SMS-based MFA to TOTP authenticator apps or FIDO2 hardware keys. Update the access control policy to explicitly prohibit SMS as an MFA factor. Verify compliance via IAM credential report.", owner:"IT Manager", deadline:"April 15, 2026", milestones:["Procure hardware keys for affected users (Apr 7)","Migrate users and disable SMS MFA (Apr 11)","Update access control policy language (Apr 14)","Verify via credential report (Apr 15)"] },
+      { id:"CAP-05", finding:"AUD-08", title:"Conduct IR Plan Tabletop Exercise", severity:"Minor", action:"Design and execute a tabletop exercise simulating a realistic incident scenario (e.g., phishing leading to credential compromise). Document the exercise, outcomes, and identified improvements. Update the IR plan based on findings.", owner:"Director of Security", deadline:"April 30, 2026", milestones:["Design tabletop scenario (Apr 10)","Schedule exercise with CIRT members (Apr 14)","Conduct tabletop exercise (Apr 21)","Document findings and update IR plan (Apr 30)"] },
+      { id:"CAP-06", finding:"AUD-09", title:"Establish Backup Restoration Testing", severity:"Minor", action:"Perform an immediate backup restoration test for RDS and S3 data. Document the process, measure actual RTO/RPO achieved, and compare against targets. Establish a quarterly restoration testing schedule with documented results.", owner:"Database Admin", deadline:"April 21, 2026", milestones:["Perform RDS point-in-time restore test (Apr 10)","Perform S3 versioned object recovery test (Apr 14)","Document results and compare to RTO/RPO targets (Apr 17)","Establish quarterly testing schedule (Apr 21)"] },
+      { id:"CAP-07", finding:"AUD-11", title:"Complete Training & Deploy Phishing Simulations", severity:"Minor", action:"Follow up with the 5 overdue employees to complete security awareness training within 14 days. Deploy a phishing simulation platform and conduct a baseline assessment. Establish quarterly phishing simulation cadence with results tracking.", owner:"HR / Security Lead", deadline:"May 15, 2026", milestones:["Send training reminders to overdue employees (Apr 7)","Achieve 100% training completion (Apr 21)","Select and configure phishing simulation tool (Apr 30)","Conduct baseline phishing simulation (May 10)","Report results and establish quarterly cadence (May 15)"] },
+      { id:"CAP-08", finding:"AUD-14", title:"Formalize Data Classification & Asset Ownership", severity:"Minor", action:"Create a formal data classification scheme (Public, Internal, Confidential, Restricted) with handling requirements for each level. Assign owners to all asset inventory entries. Integrate classification labels into the asset inventory and apply appropriate controls based on classification level.", owner:"Compliance Officer", deadline:"May 15, 2026", milestones:["Draft data classification policy (Apr 14)","Define handling requirements per level (Apr 21)","Assign owners to all inventory entries (Apr 30)","Apply classification labels to inventory (May 10)","Executive approval of classification policy (May 15)"] },
+    ];
+
+    const learningOutcomes = [
+      { title:"Internal Audit Methodology", desc:"Planning and executing an internal audit using a risk-based sampling approach — defining scope, selecting controls, gathering evidence, conducting interviews, and documenting findings in a structured and repeatable process." },
+      { title:"Evidence Review & Validation", desc:"Evaluating the sufficiency and appropriateness of audit evidence — determining whether policies, configurations, screenshots, and reports adequately demonstrate that controls are designed and operating effectively." },
+      { title:"Gap Identification & Severity Scoring", desc:"Identifying control deficiencies, classifying them by severity (Major, Minor, Observation), and articulating the business risk associated with each finding to enable prioritized remediation." },
+      { title:"Corrective Action Planning", desc:"Developing actionable remediation plans with specific milestones, assigned owners, and realistic deadlines — the critical bridge between audit findings and actual security improvement." },
+      { title:"Audit Reporting & Communication", desc:"Writing clear, professional audit reports that communicate findings to both technical teams and executive leadership — including executive summaries, detailed findings, and visual compliance summaries." },
+      { title:"Pre-Certification Readiness", desc:"Understanding how internal audits prepare organizations for external certification — identifying and resolving gaps before the external auditor arrives, maximizing the likelihood of successful certification." },
+    ];
+
+    // ---- Derived counts ----
+    const total = auditControls.length;
+    const compliant = auditControls.filter(c => c.status === 'Compliant').length;
+    const partial = auditControls.filter(c => c.status === 'Partially Implemented').length;
+    const noncompliant = auditControls.filter(c => c.status === 'Non-Compliant').length;
+    const sev = {
+      Major: auditControls.filter(c => c.severity === 'Major').length,
+      Minor: auditControls.filter(c => c.severity === 'Minor').length,
+      Observation: auditControls.filter(c => c.severity === 'Observation').length,
+    };
+    const categories = new Set(auditControls.map(c => c.category)).size;
+    const esc = s => String(s).replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+    const pct = n => Math.round(n / total * 100);
+
+    // ---- Icons (inline SVG helpers) ----
+    const icon = {
+      check: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+      minus: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>',
+      x: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+      eye: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>',
+      warn: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>',
+      up: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 7 13.5 15.5l-5-5L2 17"/><path d="M16 7h6v6"/></svg>',
+      chev: '<svg class="cap-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
+      users: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>',
+      cal: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+    };
+    const statusBadge = s => s === 'Compliant' ? `<span class="badge b-compliant">${icon.check} Compliant</span>`
+      : s === 'Partially Implemented' ? `<span class="badge b-partial">${icon.minus} Partial</span>`
+      : `<span class="badge b-noncompliant">${icon.x} Non-Compliant</span>`;
+    const sevBadge = s => !s ? '<span class="sev-na">—</span>'
+      : `<span class="sev sev-b-${s.toLowerCase() === 'observation' ? 'obs' : s.toLowerCase()}">${s}</span>`;
+
+    // ---- Render: stats ----
+    document.getElementById('stats').innerHTML = [
+      { num: total, lbl: 'Controls Audited', color: 'var(--text)' },
+      { num: compliant, lbl: 'Compliant', color: 'var(--green)' },
+      { num: noncompliant + partial, lbl: 'Non-Conformities', color: 'var(--red)' },
+      { num: correctiveActions.length, lbl: 'Corrective Actions', color: 'var(--text)' },
+    ].map(s => `<div class="stat"><span class="num" style="color:${s.color}">${s.num}</span><span class="lbl">${s.lbl}</span></div>`).join('');
+
+    // ---- Render: report ----
+    document.getElementById('report').innerHTML = `
+      <div class="report-head">
+        <h3>${esc(auditInfo.title)}</h3>
+        <div class="report-meta">
+          <span><strong>Organization:</strong> ${esc(auditInfo.organization)}</span>
+          <span><strong>Standard:</strong> ${esc(auditInfo.standard)}</span>
+          <span><strong>Audit Period:</strong> ${esc(auditInfo.auditPeriod)}</span>
+          <span><strong>Auditor:</strong> ${esc(auditInfo.auditor)}</span>
+        </div>
+      </div>
+      <div class="report-grid">
+        <div class="report-block"><h4>Scope</h4><p>${esc(auditInfo.scope)}</p></div>
+        <div class="report-block"><h4>Objective</h4><p>${esc(auditInfo.objective)}</p></div>
+        <div class="report-block full"><h4>Methodology</h4><p>${esc(auditInfo.methodology)}</p></div>
+      </div>
+      <div class="summary">
+        <h4>Executive Summary</h4>
+        <p>The internal audit assessed <strong>${total} controls</strong> across ${categories} control categories. Of the controls reviewed, <strong>${compliant} (${pct(compliant)}%)</strong> were found fully compliant, <strong>${partial}</strong> were partially implemented, and <strong>${noncompliant}</strong> were non-compliant.</p>
+        <div class="bars">
+          <div class="bar-row"><span class="bar-label">Compliant</span><div class="bar-track"><div class="bar-fill fill-green" style="width:${compliant/total*100}%"></div></div><span class="bar-count">${compliant}</span></div>
+          <div class="bar-row"><span class="bar-label">Partial</span><div class="bar-track"><div class="bar-fill fill-amber" style="width:${partial/total*100}%"></div></div><span class="bar-count">${partial}</span></div>
+          <div class="bar-row"><span class="bar-label">Non-Compliant</span><div class="bar-track"><div class="bar-fill fill-red" style="width:${noncompliant/total*100}%"></div></div><span class="bar-count">${noncompliant}</span></div>
+        </div>
+        <p>A total of <strong>${sev.Major} major</strong> and <strong>${sev.Minor} minor</strong> non-conformities were identified, along with <strong>${sev.Observation} observation</strong>. The three major findings involve: <strong>(1)</strong> missing quarterly access reviews, <strong>(2)</strong> a stale vendor risk management program, and <strong>(3)</strong> the absence of an approved business continuity plan. These represent the highest-priority items requiring remediation before the external certification audit in Q3 2026.</p>
+        <p>The organization demonstrates strong technical controls (encryption, logging, network security, change management) but has gaps in governance processes that require procedural improvements and resource allocation. A detailed Corrective Action Plan with ${correctiveActions.length} remediation items, owners, and deadlines has been produced.</p>
+      </div>
+      <div class="sev-dist">
+        <h4>Finding Severity Distribution</h4>
+        <div class="sev-cards">
+          <div class="sev-card sev-major"><span class="n">${sev.Major}</span><span class="l">Major</span><span class="d">Significant gap that could result in audit failure or material risk</span></div>
+          <div class="sev-card sev-minor"><span class="n">${sev.Minor}</span><span class="l">Minor</span><span class="d">Control exists but has implementation weaknesses or gaps</span></div>
+          <div class="sev-card sev-obs"><span class="n">${sev.Observation}</span><span class="l">Observation</span><span class="d">Improvement opportunity that does not constitute a non-conformity</span></div>
+        </div>
+      </div>`;
+
+    // ---- Render: filters + table ----
+    const statuses = [['all','All',total],['Compliant','Compliant',compliant],['Partially Implemented','Partial',partial],['Non-Compliant','Non-Compliant',noncompliant]];
+    let activeFilter = 'all';
+    const filtersEl = document.getElementById('filters');
+    const tbody = document.getElementById('tbody');
+
+    function renderFilters() {
+      filtersEl.innerHTML = `<span class="flabel">Status:</span>` + statuses.map(([v,l,n]) =>
+        `<button class="fbtn ${activeFilter===v?'active':''}" data-filter="${v}">${l} (${n})</button>`).join('');
+    }
+    function renderRows() {
+      const rows = activeFilter === 'all' ? auditControls : auditControls.filter(c => c.status === activeFilter);
+      tbody.innerHTML = rows.map(c => `
+        <tr class="row-main" data-id="${c.id}">
+          <td class="cid">${c.id}</td>
+          <td class="cname">${esc(c.control)}</td>
+          <td class="cfw">${esc(c.framework)}</td>
+          <td>${esc(c.category)}</td>
+          <td>${statusBadge(c.status)}</td>
+          <td>${sevBadge(c.severity)}</td>
+          <td class="expand-cell">${icon.chev}</td>
+        </tr>
+        <tr class="detail-row" data-detail="${c.id}" style="display:none"><td colspan="7"><div class="detail">
+          <div class="detail-grid">
+            <div class="detail-block"><strong>Auditor Finding</strong><p>${esc(c.finding)}</p></div>
+            <div class="detail-block"><strong>Evidence Reviewed</strong><ul class="ev-list">${c.evidence.map(e => `<li>${icon.eye} ${esc(e)}</li>`).join('')}</ul></div>
+          </div>
+          ${c.gap ? `<div class="gap-block ${c.severity==='Observation'?'obs-block':''}"><strong>${c.severity==='Observation'?icon.up+' Improvement Opportunity':icon.warn+' Identified Gap'}</strong><p>${esc(c.gap)}</p></div>` : ''}
+        </div></td></tr>`).join('');
+    }
+    filtersEl.addEventListener('click', e => {
+      const b = e.target.closest('[data-filter]'); if (!b) return;
+      activeFilter = b.dataset.filter; renderFilters(); renderRows();
+    });
+    tbody.addEventListener('click', e => {
+      const row = e.target.closest('.row-main'); if (!row) return;
+      const d = tbody.querySelector(`[data-detail="${row.dataset.id}"]`);
+      d.style.display = d.style.display === 'none' ? 'table-row' : 'none';
+    });
+    renderFilters(); renderRows();
+
+    // ---- Render: CAP ----
+    document.getElementById('cap-list').innerHTML = correctiveActions.map(c => `
+      <div class="cap-card" data-cap="${c.id}">
+        <div class="cap-head">
+          <div class="cap-left">
+            <span class="cap-id">${c.id}</span>
+            <div class="cap-title">
+              <h3>${esc(c.title)}</h3>
+              <div class="cap-tags"><span class="cap-ref">Finding: ${c.finding}</span>${sevBadge(c.severity)}</div>
+            </div>
+          </div>
+          <div class="cap-right">
+            <div class="cap-meta"><span>${icon.users} ${esc(c.owner)}</span><span>${icon.cal} ${esc(c.deadline)}</span></div>
+            ${icon.chev}
+          </div>
+        </div>
+        <div class="cap-body">
+          <strong>Corrective Action</strong><p>${esc(c.action)}</p>
+          <strong>Milestones</strong><ol>${c.milestones.map(m => `<li>${esc(m)}</li>`).join('')}</ol>
+        </div>
+      </div>`).join('');
+    document.getElementById('cap-list').addEventListener('click', e => {
+      const card = e.target.closest('.cap-card'); if (!card) return;
+      card.classList.toggle('open');
+    });
+
+    // ---- Render: outcomes + footer ----
+    document.getElementById('outcomes').innerHTML = learningOutcomes.map(o =>
+      `<div class="outcome"><h3>${esc(o.title)}</h3><p>${esc(o.desc)}</p></div>`).join('');
+    document.getElementById('foot').innerHTML =
+      `This is an illustrative internal audit provided as a reusable work-sample template. The organization, evidence, and findings are fictional and included only to demonstrate audit methodology and deliverables. Aligned to <a href="https://www.iso.org/standard/62085.html" target="_blank" rel="noopener noreferrer">ISO 19011:2018 ${icon.up}</a> auditing guidelines and <a href="https://www.aicpa.org/resources/landing/system-and-organization-controls-soc-suite-of-services" target="_blank" rel="noopener noreferrer">AICPA SOC 2 ${icon.up}</a> criteria.`;
+  </script>
+</body>
+</html>
