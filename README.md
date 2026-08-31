@@ -15,7 +15,7 @@ deliverable set:
 
 ## 🔗 Live demo
 
-**https://itnet-steven-smith.github.io/internal-isms-audit-demo/**
+**https://steven-smith-itnet.github.io/internal-isms-audit-demo/**
 
 ## About
 
